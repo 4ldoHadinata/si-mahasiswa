@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\BiodataMahasiswa;
 use App\Http\Requests\UpdateBiodata;
 
+use App\Exports\BiodataMahasiswaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Controller;
+
 class BiodataController extends Controller
 {
     /**
@@ -106,5 +110,10 @@ class BiodataController extends Controller
     {
         BiodataMahasiswa::where("id", $id)->delete();
         return redirect()->route("biodata.index");
+    }
+
+    public function export_excel()
+    {
+        return Excel::download(new BiodataMahasiswaExport, 'biodata_mahasiswa.xlsx');
     }
 }

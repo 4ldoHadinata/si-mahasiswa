@@ -2,6 +2,7 @@
 
 @section("content")
     <h1>Daftar Mahasiswa</h1>
+    <a href="{{ route('biodata.export_excel') }}" class="btn btn-info">Export Excel</a>
     <table class="table table-striped table-hover" id="biodata_table">
         <thead>
             <tr>

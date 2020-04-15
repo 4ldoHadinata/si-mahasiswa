@@ -26,3 +26,6 @@ Route::post("/biodata-mahasiswa","BiodataController@store")->name("biodata.store
 Route::get("/biodata-mahasiswa/{id}/edit", "BiodataController@edit")->name("biodata.edit")->middleware('web');
 Route::post("/biodata-mahasiswa/{id}/update","BiodataController@update")->name("biodata.update")->middleware('web');
 Route::get("/biodata-mahasiswa/{id}/delete", "BiodataController@destroy")->name("biodata.destroy")->middleware('web');
+
+//Export db ke excel
+Route::get('/biodata-mahasiswa/export_excel', 'BiodataController@export_excel')->name("biodata.export_excel");
