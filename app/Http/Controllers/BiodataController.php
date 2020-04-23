@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\BiodataMahasiswa;
 use App\Http\Requests\UpdateBiodata;
+use DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class BiodataController extends Controller
 {
@@ -13,10 +15,41 @@ class BiodataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Builder $builder)
     {
-        $mahasiswa = BiodataMahasiswa::all();
-        return view("biodata.index", compact("mahasiswa"));
+        // $mahasiswa = BiodataMahasiswa::all();
+        // return view("biodata.index", compact("mahasiswa"));
+
+        if (request()->ajax()) {
+            return DataTables::of(BiodataMahasiswa::query())->editColumn("nim", function ($data) {
+                return "<strong><i>" . $data->nim . "</i></strong>";
+            })->addColumn("action", function($data) {
+                return "
+                <a href='" . route("biodata.show", ["id" => $data->id]) . "' class='btn btn-success'>Detail</a>
+                <a href='" . route("biodata.edit", ["id" => $data->id]) . "' class='btn btn-warning'>Edit</a>
+                <a href='" . route("biodata.destroy", ["id" => $data->id]) . "' class='btn btn-danger'>Delete</a>
+                ";
+            })->rawColumns(["nim", "action"])->addIndexColumn()->toJson();
+        }
+
+        $html = $builder->columns([
+            ["data" => "DT_RowIndex", "name" => "#", "title" => "#", "defaultContent" => "", "orderable" => false],
+            ["data" => "name", "name" => "name", "title" => "NAMA"],
+            ["data" => "nim", "name" => "nim", "title" => "NIM"],
+            ['defaultContent' => '',
+             'data'           => 'action',
+             'name'           => 'action',
+             'title'          => 'ACTION',
+             'render'         => null,
+             'orderable'      => false,
+             'searchable'     => false,
+             'exportable'     => false,
+             'printable'      => true,
+            ],
+        ]);
+    	// $mahasiswa = BiodataMahasiswa::all();
+        // dd(BiodataMahasiswa::)
+    	return view("biodata.index", compact("html"));
     }
 
     /**
